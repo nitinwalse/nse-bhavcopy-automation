@@ -39,7 +39,13 @@ def main():
         return
 
     df.columns = df.columns.str.strip()
-    df_eq = df[df['SERIES'].str.strip() == 'EQ']
+    
+    # फक्त 'EQ' सिरीज ठेवणे
+    df_eq = df[df['SERIES'].astype(str).str.strip() == 'EQ']
+    
+    # तुम्ही दिलेले फिल्टर्स (BEES, ETF, GOLD, LIQUID वगैरे बाहेर काढणे)
+    filter_keywords = 'BEES|ETF|GOLD|LIQUID|CASE|SILVER|LIQ'
+    df_eq = df_eq[~df_eq['SYMBOL'].astype(str).str.contains(filter_keywords, case=False, na=False)]
     
     top_turnover = df_eq.sort_values(by='TURNOVER_LACS', ascending=False).head(250)
     top_volume = df_eq.sort_values(by='TTL_TRD_QNTY', ascending=False).head(250)
