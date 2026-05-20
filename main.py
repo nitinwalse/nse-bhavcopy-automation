@@ -43,8 +43,8 @@ def main():
     # १. फक्त 'EQ' सिरीज ठेवणे
     df_eq = df[df['SERIES'].astype(str).str.strip() == 'EQ'].copy()
     
-    # २. सर्व नको असलेले शब्द (कडक फिल्टर)
-    filter_keywords = 'BEES|ETF|GOLD|LIQUID|CASE|SILVER|GILT|METAL|ALPL'
+    # २. सर्व नको असलेले शब्द (SILV, LIQ असे शॉर्टफॉर्म्स ऍड केले आहेत)
+    filter_keywords = 'BEES|ETF|GOLD|LIQ|CASE|SILV|GILT|METAL|ALPL|NIFTY|SENSEX'
     df_eq = df_eq[~df_eq['SYMBOL'].astype(str).str.contains(filter_keywords, case=False, na=False, regex=True)]
     
     # ३. SYMBOL च्या आधी "NSE:" लावणे
@@ -53,6 +53,8 @@ def main():
     top_turnover = df_eq.sort_values(by='TURNOVER_LACS', ascending=False).head(250)
     top_volume = df_eq.sort_values(by='TTL_TRD_QNTY', ascending=False).head(250)
     unique_df = pd.concat([top_turnover, top_volume]).drop_duplicates(subset=['SYMBOL'])
+
+    print(f"Found {len(unique_df)} unique stocks after ultra-filtering.")
 
     scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
     creds_json = json.loads(os.environ.get('GCP_CREDENTIALS'))
