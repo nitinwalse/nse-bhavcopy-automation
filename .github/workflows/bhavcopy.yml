@@ -1,0 +1,28 @@
+name: Daily Bhavcopy Bot
+
+on:
+  schedule:
+    # सोमवार ते शुक्रवार रोज रात्री ८:०० वाजता (IST) रन होईल
+    - cron: '30 14 * * 1-5'
+  workflow_dispatch: 
+
+jobs:
+  run-bot:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+        
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+          
+      - name: Install Packages
+        run: pip install -r requirements.txt
+        
+      - name: Run Script
+        env:
+          GCP_CREDENTIALS: ${{ secrets.GCP_CREDENTIALS }}
+          SHEET_ID: ${{ secrets.SHEET_ID }}
+        run: python main.py
