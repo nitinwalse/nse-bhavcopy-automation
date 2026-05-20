@@ -40,12 +40,15 @@ def main():
 
     df.columns = df.columns.str.strip()
     
-    # फक्त 'EQ' सिरीज ठेवणे
-    df_eq = df[df['SERIES'].astype(str).str.strip() == 'EQ']
+    # १. फक्त 'EQ' सिरीज ठेवणे
+    df_eq = df[df['SERIES'].astype(str).str.strip() == 'EQ'].copy()
     
-    # तुम्ही दिलेले फिल्टर्स (BEES, ETF, GOLD, LIQUID वगैरे बाहेर काढणे)
-    filter_keywords = 'BEES|ETF|GOLD|LIQUID|CASE|SILVER|LIQ'
-    df_eq = df_eq[~df_eq['SYMBOL'].astype(str).str.contains(filter_keywords, case=False, na=False)]
+    # २. सर्व नको असलेले शब्द (कडक फिल्टर)
+    filter_keywords = 'BEES|ETF|GOLD|LIQUID|CASE|SILVER|GILT|METAL|ALPL'
+    df_eq = df_eq[~df_eq['SYMBOL'].astype(str).str.contains(filter_keywords, case=False, na=False, regex=True)]
+    
+    # ३. SYMBOL च्या आधी "NSE:" लावणे
+    df_eq['SYMBOL'] = 'NSE:' + df_eq['SYMBOL'].astype(str).str.strip()
     
     top_turnover = df_eq.sort_values(by='TURNOVER_LACS', ascending=False).head(250)
     top_volume = df_eq.sort_values(by='TTL_TRD_QNTY', ascending=False).head(250)
