@@ -44,7 +44,7 @@ def main():
     df_eq = df[df['SERIES'].astype(str).str.strip() == 'EQ'].copy()
     
     # २. सर्व नको असलेले शब्द (SILV, LIQ असे शॉर्टफॉर्म्स ऍड केले आहेत)
-    filter_keywords = 'BEES|ETF|GOLD|LIQ|CASE|SILV|GILT|METAL|ALPL|NIFTY|SENSEX'
+    filter_keywords = 'BEES|ETF|GOLD|LIQ|CASE|SILV|GILT|METAL|ALPL|NIFTY|SENSEX|MODEFENCE'
     df_eq = df_eq[~df_eq['SYMBOL'].astype(str).str.contains(filter_keywords, case=False, na=False, regex=True)]
     
     # ३. SYMBOL च्या आधी "NSE:" लावणे
